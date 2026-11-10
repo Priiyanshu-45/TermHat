@@ -1,0 +1,31 @@
+{
+  "name": "termhat",
+  "version": "1.0.0",
+  "description": "NLP Terminal ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "link": "npx tsc && npm link"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "bin": {
+    "termhat": "./dist/index.js",
+    "th": "./dist/index.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.9.0",
+    "commander": "^15.1.0",
+    "figlet": "^1.12.0",
+    "picocolors": "^1.1.1"
+  }
+}
