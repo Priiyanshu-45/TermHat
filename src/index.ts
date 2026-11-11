@@ -10,16 +10,15 @@ program
   .version("1.0.0")
   .description("Give natural language prompt stating what you want to do.")
   .argument("[task...]", "specify task to work")
-  .option("-a, --allow", "Allow without explicit confirmation.")
   .action(async (taskArr, option) => {
     if(taskArr.length != 0) {
       const taskSentence = taskArr.join(" ");
-      executer(taskSentence, option)
+      await executer(taskSentence, option)
     process.exit(0);
     }
   });
 
-if(process.argv.length   <= 2){
+if(process.argv.length <= 2){
   showBanner();
 }
 

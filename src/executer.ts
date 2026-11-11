@@ -8,8 +8,6 @@ import responseByAI from "./request.js";
 
 
 export default async function executer(task : string, option : string) {
-    const response = await responseByAI(task);
-
     p.intro(pc.green("Understanding your intent..."));
     const spin = p.spinner({
       onCancel: () => {
@@ -18,6 +16,7 @@ export default async function executer(task : string, option : string) {
       },
     });
     spin.start(pc.cyan("Thinking through the best way..."));
+    const response = await responseByAI(task);
     await new Promise((resolve) => setTimeout(resolve, 1200));
 
     if (!response) {
@@ -26,10 +25,10 @@ export default async function executer(task : string, option : string) {
     } else {
       spin.stop(pc.cyanBright(pc.cyan("Got it.")));
 
-    if(option == "--a")  {
+    // if(option)  {
 
-    }
-
+    // }
+    
     const choice = await p.select({
         message: "How would you like to proceed: ",
         options: [
@@ -54,7 +53,7 @@ export default async function executer(task : string, option : string) {
       if (choice === "explain") {
         console.log(pc.green("Why this command? ") + pc.gray(response.explain));
         console.log(
-          `\n${pc.yellow("Command: ")}$${pc.green(response.command)}`,
+          `${pc.yellow("Command: ")}$${pc.green(response.command)}`,
         );
       }
 
