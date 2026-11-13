@@ -19,7 +19,7 @@ program
   });
 
 if(process.argv.length <= 2){
-  showBanner();
+  await showBanner();
 }
 
 

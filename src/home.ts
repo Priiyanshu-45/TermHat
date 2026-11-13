@@ -4,6 +4,7 @@ import pc from "picocolors";
 import * as p from "@clack/prompts";
 import executer from "./executer.js";
 import figlet from "figlet";
+import { connectToAI } from "./ai/helper.js";
 
 export default async function home() {
   const opt = await p.select({
@@ -105,7 +106,30 @@ export default async function home() {
       console.log(pc.red("User pressed Ctrl+C."));
       process.exit(0);
     }
-    await executer(choose as string, "no option");
+    await executer(choose as string);
     process.exit(0);
   }
+
+  if (opt === "configure") {
+    const chooseAi = await p.select({
+      message: `${pc.cyan("Choose your AI provider ")}${pc.yellow("(replaces any previous setup): ")}`,
+      options: [
+        { value: "gemini", label: "Google Gemini", hint: "Free tier available (Recommended)"},
+        { value: "openai", label: "OpenAI", hint: "Paid API credits required" },
+      ],
+    });
+    if(p.isCancel(chooseAi)){
+      console.log(pc.yellow("Cancelled"))
+      process.exit(0);
+    }
+    if(chooseAi === "gemini"){
+      await connectToAI(chooseAi);
+    }
+  }
+
+  if (opt === "exit") {
+    p.outro(pc.green("Thanks for using TermHat! See you next time."));
+    p.cancel("Exit");
+  }
+
 }
