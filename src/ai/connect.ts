@@ -2,7 +2,6 @@ import pc from "picocolors";
 import * as p from "@clack/prompts";
 import { testConnection } from "./gemini.js";
 import { configure, getConfig, clearConfig } from "../util/config.js";
-import { MASTER_PROMPT } from "./prompt.js";
 
 
 type AI = "gemini";

@@ -2,11 +2,35 @@
 import process from "node:process";
 import pc from "picocolors";
 import * as p from "@clack/prompts";
-import executer from "./executer.js";
+import executer from "../core/executer.js";
 import figlet from "figlet";
-import { connectToAI } from "./ai/helper.js";
+import { connectToAI } from "../ai/connect.js";
+import { getConfig } from "../util/config.js";
+
+
+async function configure() {
+  const chooseAi = await p.select({
+      message: `${pc.cyan("Choose your AI provider ")}${pc.yellow("(replaces any previous setup): ")}`,
+      options: [
+        { value: "gemini", label: "Google Gemini", hint: "Free tier available (Recommended)"},
+        // { value: "openai", label: "OpenAI", hint: "Paid API credits required" },
+      ],
+    });
+    if(p.isCancel(chooseAi)){
+      console.log(pc.yellow("Cancelled"))
+      process.exit(0);
+    }
+    if(chooseAi === "gemini"){
+      await connectToAI(chooseAi);
+    }
+}
 
 export default async function home() {
+  if(!getConfig().apiKey) {
+    await configure();
+    if(!getConfig().apiKey) process.exit(0);
+  }
+
   const opt = await p.select({
     message: "What would you like to do?",
     options: [
@@ -52,7 +76,7 @@ export default async function home() {
       p.outro(pc.dim("Request cancelled."));
       process.exit(0);
     }
-    await executer(request as string, "no option");
+    await executer(request as string, {});
   }
 
   if (opt === "learn") {
@@ -65,17 +89,27 @@ export default async function home() {
     p.intro(pc.inverse("Using TermHat is simple."));
     p.box(
       [
-        pc.bold("1. Ask for something"),
+        pc.bold("1. Describe what you want"),
         `   ${pc.magenta(`th ${pc.green("create a folder named projects")}`)}`,
         "",
         pc.bold("2. Review the command"),
-        "   TermHat understands your request and shows",
-        "   you the command it plans to run.",
+        "   TermHat turns your request into a real terminal",
+        "   command and shows it to you before anything runs.",
         "",
         pc.bold("3. Choose what to do"),
-        "   Execute it, or understand it first.",
+        "   Run it, copy it, or read an explanation first.",
+        "   Risky commands ask for extra confirmation.",
         "",
-        pc.bold(pc.green("You're in control.")),
+        pc.bold("4. Some commands are manual"),
+        "   Things like moving into a folder or activating an",
+        "   environment can't be run by TermHat. You get the",
+        "   command to paste into your terminal yourself.",
+        "",
+        pc.bold("5. Quick options"),
+        `   ${pc.magenta(`th ${pc.green("-r")} <task>`)}  skip the menu, then confirm and run`,
+        `   ${pc.magenta(`th ${pc.green("-c")} <task>`)}  copy the command instead of running it`,
+        "",
+        pc.bold(pc.green("You're always in control.")),
       ].join("\n"),
       "How TermHat works",
       {
@@ -106,30 +140,16 @@ export default async function home() {
       console.log(pc.red("User pressed Ctrl+C."));
       process.exit(0);
     }
-    await executer(choose as string);
+    await executer(choose as string, {});
     process.exit(0);
   }
 
   if (opt === "configure") {
-    const chooseAi = await p.select({
-      message: `${pc.cyan("Choose your AI provider ")}${pc.yellow("(replaces any previous setup): ")}`,
-      options: [
-        { value: "gemini", label: "Google Gemini", hint: "Free tier available (Recommended)"},
-        { value: "openai", label: "OpenAI", hint: "Paid API credits required" },
-      ],
-    });
-    if(p.isCancel(chooseAi)){
-      console.log(pc.yellow("Cancelled"))
-      process.exit(0);
-    }
-    if(chooseAi === "gemini"){
-      await connectToAI(chooseAi);
-    }
+    await configure();
   }
 
   if (opt === "exit") {
     p.outro(pc.green("Thanks for using TermHat! See you next time."));
-    p.cancel("Exit");
   }
 
 }

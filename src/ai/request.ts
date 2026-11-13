@@ -1,6 +1,6 @@
-import { askGemini } from "./ai/gemini.js";
-import { getConfig } from "./util/config.js";
-import { buildUserPrompt } from "./util/context.js";
+import { askGemini } from "./gemini.js";
+import { getConfig } from "../util/config.js";
+import { buildUserPrompt } from "../util/context.js";
 import pc from "picocolors";
 
 export default async function responseByAI(task : string) {

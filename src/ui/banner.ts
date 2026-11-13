@@ -2,7 +2,7 @@
 import process from 'node:process'
 import pc from "picocolors";
 import figlet from "figlet";
-import home from './home.js';
+import home from '../ui/home.js';
 
 async function showBanner() {
 const terminalWidth = process.stdout.columns || process.env.COLUMNS || 85;

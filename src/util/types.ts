@@ -5,3 +5,8 @@ export interface TermhatResponse {
     data_loss_risk: "NONE" | "POSSIBLE" | "EXPECTED" | "UNKNOWN",
     message: string | null
 }
+
+export interface CLIOptions {
+  run?: boolean;
+  copy?: boolean;
+}
